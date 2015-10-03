@@ -9,13 +9,13 @@ typedef struct __PHONE_BOOK_ENTRY {
     char firstName[16];
     char email[16];
     char phone[10];
-    char cell[10];
+    char zip[5];
+    struct __PHONE_BOOK_ENTRY *pNext;
     char addr1[16];
     char addr2[16];
     char city[16];
+    char cell[10];
     char state[2];
-    char zip[5];
-    struct __PHONE_BOOK_ENTRY *pNext;
 } entry;
 
 entry *findName(char lastname[], entry *pHead);
