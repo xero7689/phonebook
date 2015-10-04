@@ -11,7 +11,7 @@ phonebook_orig: $(SRCS_common) phonebook_orig.c phonebook_orig.h
 
 phonebook_opt: $(SRCS_common) phonebook_opt.c phonebook_opt.h
 	$(CC) $(CFLAGS_common) -DIMPL="\"$@.h\"" -o $@ \
-		main_opt.c $@.c
+		main.c $@.c
 
 run: $(EXEC)
 	watch -d -t ./phonebook_orig
