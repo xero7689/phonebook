@@ -9,17 +9,17 @@
 #define DICT_FILE "./dictionary/words.txt"
 #define FIND_NAME "zyxel"
 
-static double diff_in_second(struct timespec t1, struct timespec t2)
+static double diff_in_milisecond(struct timespec t1, struct timespec t2)
 {
     struct timespec diff;
     if (t2.tv_nsec-t1.tv_nsec < 0) {
         diff.tv_sec  = t2.tv_sec - t1.tv_sec - 1;
-        diff.tv_nsec = t2.tv_nsec - t1.tv_nsec + 1000000000;
+        diff.tv_nsec = t2.tv_nsec - t1.tv_nsec + 1000000;
     } else {
         diff.tv_sec  = t2.tv_sec - t1.tv_sec;
         diff.tv_nsec = t2.tv_nsec - t1.tv_nsec;
     }
-    return (diff.tv_sec + diff.tv_nsec / 1000000000.0);
+    return (diff.tv_sec + diff.tv_nsec / 1000000.0);
 }
 
 int main(int argc, char *argv[])
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 #endif
     }
     clock_gettime(CLOCK_REALTIME, &end);
-    cpu_time1 = diff_in_second(start, end);
+    cpu_time1 = diff_in_milisecond(start, end);
 
     /* close file as soon as possible */
     fclose(fp);
@@ -88,10 +88,10 @@ int main(int argc, char *argv[])
     clock_gettime(CLOCK_REALTIME, &start);
     findName(input, findPtr);
     clock_gettime(CLOCK_REALTIME, &end);
-    cpu_time2 = diff_in_second(start, end);
+    cpu_time2 = diff_in_milisecond(start, end);
 
-    printf("execution time of append() : %lf sec\n", cpu_time1);
-    printf("execution time of findName() : %lf sec\n", cpu_time2);
+    printf("execution time of append() : %lf ms\n", cpu_time1);
+    printf("execution time of findName() : %lf ms\n", cpu_time2);
 
     /* FIXME: release all allocated entries */
     free(pHead);
