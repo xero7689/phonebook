@@ -7,6 +7,7 @@
 #include IMPL
 
 #define DICT_FILE "./dictionary/words.txt"
+#define FIND_NAME "zyxel"
 
 static double diff_in_second(struct timespec t1, struct timespec t2)
 {
@@ -42,6 +43,10 @@ int main(int argc, char *argv[])
     printf("size of entry : %lu bytes\n", sizeof(entry));
     e = pHead;
     e->pNext = NULL;
+#if defined(OPTIMIZE)
+    hashTable *ht = createHashTable(TABLE_SIZE);
+    printf("Hash Table Size: %d\n", TABLE_SIZE);
+#endif
 
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
@@ -52,7 +57,11 @@ int main(int argc, char *argv[])
             i++;
         line[i - 1] = '\0';
         i = 0;
+#if defined(OPTIMIZE)
+        e = append(line, ht);
+#else
         e = append(line, e);
+#endif
     }
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time1 = diff_in_second(start, end);
@@ -60,22 +69,24 @@ int main(int argc, char *argv[])
     /* close file as soon as possible */
     fclose(fp);
 
-    e = pHead;
-
     /* the givn last name to find */
-    char input[MAX_LAST_NAME_SIZE] = "zyxel";
-    e = pHead;
-
-    assert(findName(input, e) &&
+    char input[MAX_LAST_NAME_SIZE] = FIND_NAME;
+    void *findPtr = NULL;
+#if defined(OPTIMIZE)
+    findPtr = ht;
+#else
+    findPtr = pHead;
+#endif
+    assert(findName(input, findPtr) &&
            "Did you implement findName() in " IMPL "?");
-    assert(0 == strcmp(findName(input, e)->lastName, "zyxel"));
+    assert(0 == strcmp(findName(input, findPtr)->lastName, "zyxel"));
 
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
 #endif
     /* compute the execution time */
     clock_gettime(CLOCK_REALTIME, &start);
-    findName(input, e);
+    findName(input, findPtr);
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time2 = diff_in_second(start, end);
 
