@@ -13,7 +13,7 @@
 #define PRIME_FILE "./dictionary/Prime-10000.csv"
 #define TOLOWERCASE_FILE "./dictionary/tolowercase.c"
 
-#define SEARCH_NAME "windy"
+#define SEARCH_NAME "zuzana"
 
 static double diff_in_second(struct timespec t1, struct timespec t2)
 {
@@ -35,7 +35,6 @@ int main(int argc, char *argv[])
     char line[MAX_LAST_NAME_SIZE];
     struct timespec start, end;
     double cpu_time1, cpu_time2;
-    entry *findPtr;
 
     /* check file opening */
     fp = fopen(ALL_NAME_FILE, "r");
@@ -45,22 +44,17 @@ int main(int argc, char *argv[])
     }
 
     /* build the entry */
-#if defined(_PHONEBOOK_H)
+#if defined(OPTIMIZE)
+    entry *pHead = NULL;  // root
+#else
     entry *pHead, *e;
     pHead = (entry *) malloc(sizeof(entry));
     printf("size of entry : %lu bytes\n", sizeof(entry));
     e = pHead;
     e->pNext = NULL;
+#endif
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
-#endif
-#endif
-
-#if defined(_PHONEBOOK_OPT_H)
-    entry *root = NULL;
-#if defined(__GNUC__)
-        __builtin___clear_cache((char *) root, (char *) root + sizeof(entry));
-#endif
 #endif
 
     clock_gettime(CLOCK_REALTIME, &start);
@@ -69,13 +63,13 @@ int main(int argc, char *argv[])
             i++;
         line[i - 1] = '\0';
         i = 0;
-#if defined(_PHONEBOOK_H)
-        e = append(line, e);
-#elif defined(_PHONEBOOK_OPT_H)
-        if (root != NULL)
-            append(line, root);
+#if defined(OPTIMIZE)
+        if (pHead != NULL)
+            append(line, pHead);
         else
-            root = append(line, root);
+            pHead = append(line, pHead);
+#else
+        e = append(line, e);
 #endif
     }
     clock_gettime(CLOCK_REALTIME, &end);
@@ -86,22 +80,16 @@ int main(int argc, char *argv[])
 
     /* the givn last name to find */
     char input[MAX_LAST_NAME_SIZE] = SEARCH_NAME;
-#if defined(_PHONEBOOK_H)
-    findPtr = pHead;
-#elif defined(_PHONEBOOK_OPT_H)
-    findPtr = root;
-#endif
-
-    assert(findName(input, findPtr) &&
+    assert(findName(input, pHead) &&
            "Did you implement findName() in " IMPL "?");
-    assert(0 == strcmp(findName(input, findPtr)->lastName, SEARCH_NAME));
+    assert(0 == strcmp(findName(input, pHead)->lastName, SEARCH_NAME));
 
 #if defined(__GNUC__)
-    __builtin___clear_cache((char *) findPtr, (char *) findPtr + sizeof(entry));
+    __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
 #endif
     /* compute the execution time */
     clock_gettime(CLOCK_REALTIME, &start);
-    findName(input, findPtr);
+    findName(input, pHead);
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time2 = diff_in_second(start, end);
 
@@ -109,7 +97,7 @@ int main(int argc, char *argv[])
     printf("execution time of findName() : %lf sec\n", cpu_time2);
 
     /* FIXME: release all allocated entries */
-    free(findPtr);
+    free(pHead);
 
     return 0;
 }

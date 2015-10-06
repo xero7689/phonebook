@@ -7,14 +7,17 @@
 /* FILL YOUR OWN IMPLEMENTATION HERE! */
 entry *findName(char lastName[], entry *root)
 {
-    /* TODO: implement */
     entry *tmp = root;
+    //int depth = 0;  // for debug
     while (tmp != NULL) {
         if (strcmp(lastName, tmp->lastName) > 0) {
             tmp = tmp->pRight;
+            //depth++;
         } else if (strcmp(lastName, tmp->lastName) < 0) {
             tmp = tmp->pLeft;
+            //depth++;
         } else {
+            //printf("Name: %s at depth %d\n", lastName, depth);
             return tmp;
         }
     }
