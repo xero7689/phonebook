@@ -8,8 +8,7 @@
 typedef unsigned int tableSize;
 
 /* Hash version */
-typedef struct __PHONE_BOOK_ENTRY {
-    char lastName[MAX_LAST_NAME_SIZE];
+typedef struct __DETAIL_ENTRY {
     char firstName[16];
     char email[16];
     char addr1[16];
@@ -17,9 +16,15 @@ typedef struct __PHONE_BOOK_ENTRY {
     char city[16];
     char phone[10];
     char zip[5];
-    struct __PHONE_BOOK_ENTRY *pNext;
     char cell[10];
     char state[2];
+   
+} detail_entry;
+
+typedef struct __PHONE_BOOK_ENTRY {
+   char lastName[MAX_LAST_NAME_SIZE];
+   detail_entry *detail;
+   struct __PHONE_BOOK_ENTRY *pNext;
 } entry;
 
 typedef struct __HASH_TABLE {
