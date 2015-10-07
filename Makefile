@@ -1,6 +1,6 @@
 CC ?= gcc
 CFLAGS_common ?= -O3 -Wall -std=gnu99
-PERF_FLAGS = stat -r 10 -e cache-misses,cache-references,L1-dcache-load-misses,L1-dcache-store-misses,L1-dcache-prefetch-misses,L1-icache-load-misses,cs,branch-misses
+PERF_FLAGS = stat -r 10 -e cache-misses,cache-references,L1-dcache-load-misses,L1-dcache-store-misses,L1-dcache-prefetch-misses,L1-icache-load-misses,cs,branch-misses,dTLB-load-misses,dTLB-store-misses,iTLB-loads,iTLB-load-misses
 SRCS_common = main.c
 
 EXEC = phonebook_orig phonebook_opt
