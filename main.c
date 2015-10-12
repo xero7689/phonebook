@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     }
 
     /* build the entry */
-#if defined(__OPT__)
+#if defined(OPT)
     entry *pHead = NULL;  // root
 #else
     entry *pHead, *e;
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
             i++;
         line[i - 1] = '\0';
         i = 0;
-#if defined(__OPT__)
+#if defined(OPT)
         if (pHead != NULL)
             append(line, pHead);
         else

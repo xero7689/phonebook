@@ -2,7 +2,7 @@
 #define _PHONEBOOK_OPT_H
 
 #define MAX_LAST_NAME_SIZE 16
-#define __OPT__
+#define OPT
 
 /* original version */
 typedef struct __PHONE_BOOK_ENTRY {
