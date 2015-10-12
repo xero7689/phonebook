@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     printf("size of entry : %lu bytes\n", sizeof(entry));
     e = pHead;
     e->pNext = NULL;
-#if defined(OPTIMIZE)
+#if defined(OPT)
     hashTable *ht = createHashTable(TABLE_SIZE);
     printf("Hash Table Size: %d\n", TABLE_SIZE);
 #endif
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
             i++;
         line[i - 1] = '\0';
         i = 0;
-#if defined(OPTIMIZE)
+#if defined(OPT)
         e = append(line, ht);
 #else
         e = append(line, e);
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
     /* the givn last name to find */
     char input[MAX_LAST_NAME_SIZE] = FIND_NAME;
     void *findPtr = NULL;
-#if defined(OPTIMIZE)
+#if defined(OPT)
     findPtr = ht;
 #else
     findPtr = pHead;
